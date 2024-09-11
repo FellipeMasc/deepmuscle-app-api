@@ -1,0 +1,8 @@
+venv/
+Include/
+*.cfg
+Lib/
+alem
+__pycache__
+*.pyc
+.env
