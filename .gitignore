@@ -6,4 +6,3 @@ alem
 __pycache__
 *.pyc
 .env
-Scripts/

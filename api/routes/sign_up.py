@@ -5,14 +5,14 @@ from sql.schemas import UserCreate
 from fastapi.exceptions import HTTPException
 from werkzeug.security import generate_password_hash,check_password_hash
 
-signup_router = APIRouter(
+auth_router = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
 
 session = SessionLocal(bind=engine)
 
-@signup_router.post("/sign_up", response_model=UserCreate, 
+@auth_router.post("/sign_up", response_model=UserCreate, 
 status_code=status.HTTP_201_CREATED)
 async def sign_up(user: UserCreate):
     db_email = session.query(User).filter(User.email == user.email).first()

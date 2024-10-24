@@ -25,20 +25,5 @@ class UserCreate(BaseModel):
             }
         }
 
-class settings(BaseModel):
-    authjwt_secret_key:str='efabc2443dbf72a23f7df4817d91ffeb035c99aca0bb5fd8e2b6cfca8e281892'
-
-class Login(BaseModel):
-    email: str
-    password: str
-
-    class Config:
-        from_attributes = True
-        schemas_extra = {
-            "example": {
-                "email": "felipe@gmail.com",
-                "password": "admin",
-            }
-        }
 
 
