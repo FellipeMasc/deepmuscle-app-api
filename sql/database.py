@@ -10,12 +10,19 @@ connection_url = URL.create(
     password="12345678",
     host="localhost",
     database="deepmuscle-dev",
-    query={"driver": "ODBC Driver 17 for SQL Server"},
+    query={
+        "driver": "ODBC Driver 17 for SQL Server",
+        "TrustServerCertificate": "yes"
+    },
 )
 
-engine = create_engine(
-    connection_url
-)
+engine = create_engine(connection_url, echo=True)
+
+# engine = create_engine('mysql+pymysql://root:20314167@localhost/deepmuscle_dev', 
+# echo=True
+# )
+
+
 
 conn = engine.connect()
 
