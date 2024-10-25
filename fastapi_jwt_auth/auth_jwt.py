@@ -1,5 +1,5 @@
 import jwt, re, uuid, hmac
-# from jwt.algorithms import requires_cryptography, has_crypto
+from jwt.algorithms import requires_cryptography, has_crypto
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Union, Sequence
 from fastapi import Request, Response, WebSocket
@@ -82,7 +82,7 @@ class AuthJWT(AuthConfig):
 
         :return: plain text or RSA depends on algorithm
         """
-        symmetric_algorithms, asymmetric_algorithms = {"HS256","HS384","HS512"} #, requires_cryptography
+        symmetric_algorithms, asymmetric_algorithms = {"HS256","HS384","HS512"}, requires_cryptography
 
         if algorithm not in symmetric_algorithms and algorithm not in asymmetric_algorithms:
             raise ValueError("Algorithm {} could not be found".format(algorithm))
@@ -95,10 +95,9 @@ class AuthJWT(AuthConfig):
 
             return self._secret_key
 
-        # if algorithm in asymmetric_algorithms and not has_crypto:
-        if algorithm in asymmetric_algorithms:
+        if algorithm in asymmetric_algorithms and not has_crypto:
             raise RuntimeError(
-                "Missing dependencies for using asymmetric algorithms. run 'pip install fastapi-jwt-auth[asymmetric]'"
+                "Missing dependencies for using asymmetric algorithms. run 'pip install fastapi-another-jwt-auth[asymmetric]'"
             )
 
         if process == "encode":
@@ -153,6 +152,8 @@ class AuthJWT(AuthConfig):
             raise TypeError("audience must be a string or sequence")
         if algorithm and not isinstance(algorithm, str):
             raise TypeError("algorithm must be a string")
+        if headers and not isinstance(headers, dict):
+            raise TypeError("headers must be a dict")            
         if user_claims and not isinstance(user_claims, dict):
             raise TypeError("user_claims must be a dictionary")
 
@@ -192,7 +193,7 @@ class AuthJWT(AuthConfig):
             secret_key,
             algorithm=algorithm,
             headers=headers
-        ).decode('utf-8')
+        )
 
     def _has_token_in_denylist_callback(self) -> bool:
         """
