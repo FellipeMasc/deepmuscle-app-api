@@ -1,5 +1,5 @@
 import jwt, re, uuid, hmac
-from jwt.algorithms import requires_cryptography, has_crypto
+# from jwt.algorithms import requires_cryptography, has_crypto
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Dict, Union, Sequence
 from fastapi import Request, Response, WebSocket
@@ -82,7 +82,7 @@ class AuthJWT(AuthConfig):
 
         :return: plain text or RSA depends on algorithm
         """
-        symmetric_algorithms, asymmetric_algorithms = {"HS256","HS384","HS512"}, requires_cryptography
+        symmetric_algorithms, asymmetric_algorithms = {"HS256","HS384","HS512"} #, requires_cryptography
 
         if algorithm not in symmetric_algorithms and algorithm not in asymmetric_algorithms:
             raise ValueError("Algorithm {} could not be found".format(algorithm))
@@ -95,7 +95,8 @@ class AuthJWT(AuthConfig):
 
             return self._secret_key
 
-        if algorithm in asymmetric_algorithms and not has_crypto:
+        # if algorithm in asymmetric_algorithms and not has_crypto:
+        if algorithm in asymmetric_algorithms:
             raise RuntimeError(
                 "Missing dependencies for using asymmetric algorithms. run 'pip install fastapi-jwt-auth[asymmetric]'"
             )
