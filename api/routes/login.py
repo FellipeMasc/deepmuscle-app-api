@@ -41,18 +41,3 @@ async def login(login:Login, Authorize: AuthJWT = Depends()):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
     detail="Invalid Credentials")
 
-@login_router.post("/refresh")
-async def refresh_token(Authorize: AuthJWT = Depends()):
-        try:
-            Authorize.jwt_refresh_token_required()
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please provide a valid refresh token")
-
-        current_user = Authorize.get_jwt_subject()
-    
-        access_token = Authorize.create_access_token(subject=current_user)
-        response={
-        "access": access_token
-         }
-        return jsonable_encoder(response)

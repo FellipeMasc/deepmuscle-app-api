@@ -24,9 +24,12 @@ status_code=status.HTTP_200_OK)
 async def get_user_details(details_user: UserDetailsModel, Authorize: AuthJWT = Depends()):
     try:
         Authorize.jwt_required()
+        if Authorize.get_raw_jwt()['exp'] < datetime.now().timestamp():
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
+                               detail="Token expirado") 
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
-       detail="Invalid Token")
+       detail="Token inválido")
     
     current_user = Authorize.get_jwt_subject()
     
