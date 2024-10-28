@@ -6,7 +6,6 @@ Create Date: 2024-08-27 09:39:48.621678
 
 """
 from typing import Sequence, Union
-import sqlmodel.sql.sqltypes
 from alembic import op
 import sqlalchemy as sa
 
