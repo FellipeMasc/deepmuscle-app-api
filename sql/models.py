@@ -48,7 +48,7 @@ class UserDetails(Base):
     user_id = Column(ForeignKey('users.id'), nullable=False)
     height = Column(Float(53), nullable=False)
     weight = Column(Float(53), nullable=False)
-    workout_id = Column(Integer, nullable=False)
+    workout_id = Column(Integer, nullable=True)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
     gender = Column(String(collation='Latin1_General_CI_AS'))
