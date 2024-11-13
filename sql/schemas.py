@@ -1,29 +1,26 @@
 from pydantic import BaseModel
 from typing import Optional
 
-
-class UserCreate(BaseModel):
+class UserOut(BaseModel):
+    id: int
     full_name: str
     email: str
-    age: int
-    country: str
-    phone: str
-    password: str
-    is_active:Optional[bool] 
+    hashed_password: str
+    
+class UserIn(BaseModel):
+    full_name: str
+    email: str
 
-    class Config:
-        from_attributes = True
-        schemas_extra = {
-            "example": {
-                "full_name": "Felipe",
-                "email": "felipe@gmail.com",
-                "age": 25,
-                "country": "Brazil",
-                "phone": "1122334455",
-                "password": "12345678",
-                "is_active": True
-            }
-        }
+class UserCreate(UserIn):
+    password: str
+
+class UserDetailsCreate(BaseModel):
+    height: float
+    weight: float
+    age: int
+    fitness_level: str
+    gender: str
+    
 
 class settings(BaseModel):
     authjwt_secret_key:str='efabc2443dbf72a23f7df4817d91ffeb035c99aca0bb5fd8e2b6cfca8e281892'

@@ -40,6 +40,7 @@ class Workouts(Base):
     updated_at = Column(DateTime, nullable=False)
     description = Column(String(collation='Latin1_General_CI_AS'))
 
+    user_details = relationship('UserDetails', back_populates='workout')
 
 class UserDetails(Base):
     __tablename__ = 'user_details'
@@ -48,7 +49,8 @@ class UserDetails(Base):
     user_id = Column(ForeignKey('users.id'), nullable=False)
     height = Column(Float(53), nullable=False)
     weight = Column(Float(53), nullable=False)
-    workout_id = Column(Integer, nullable=True)
+    workout_id = Column(ForeignKey('workouts.id'), nullable=True)
+    current_workout_day = Column(Integer, nullable=True)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
     gender = Column(String(collation='Latin1_General_CI_AS'))
@@ -56,6 +58,7 @@ class UserDetails(Base):
     fitness_level = Column(String(collation='Latin1_General_CI_AS'))
 
     user = relationship('Users', back_populates='user_details')
+    workout = relationship('Workouts', back_populates='user_details')
 
 
 class WorkoutDays(Base):
