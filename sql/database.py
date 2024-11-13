@@ -22,8 +22,6 @@ engine = create_engine(connection_url, echo=True)
 # echo=True
 # )
 
-
-
 conn = engine.connect()
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

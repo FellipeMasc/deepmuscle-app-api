@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from datetime import timedelta
 from sql.schemas import Login
-from sql.models import User
+from sql.models import Users
 from api.deps import SessionDep
 from api.auth.main import authenticate_user, create_access_token, Token
 import os 
@@ -26,8 +26,8 @@ session = SessionLocal(bind=engine)
 
 @login_router.post("/login", status_code=200)
 async def login(user:Login, Authorize: AuthJWT = Depends()):
-    db_user = session.query(User).filter(User.email == user.email).first()
-
+    db_user = session.query(Users).filter(Users.email == user.email).first()
+    print("oi")
     if db_user and check_password_hash(db_user.password, user.password):
         access_token = Authorize.create_access_token(subject=db_user.email)
         refresh_token = Authorize.create_refresh_token(subject=db_user.email)
