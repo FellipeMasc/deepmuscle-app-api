@@ -16,7 +16,7 @@ connection_url = URL.create(
     },
 )
 
-engine = create_engine(connection_url, echo=True)
+engine = create_engine(connection_url)
 
 # engine = create_engine('mysql+pymysql://root:20314167@localhost/deepmuscle_dev', 
 # echo=True

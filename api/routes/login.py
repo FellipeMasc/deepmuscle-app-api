@@ -24,19 +24,17 @@ login_router = APIRouter(
 
 session = SessionLocal(bind=engine)
 
-@login_router.post("/login", status_code=200)
-async def login(user:Login, Authorize: AuthJWT = Depends()):
-    db_user = session.query(Users).filter(Users.email == user.email).first()
-    print("oi")
-    if db_user and check_password_hash(db_user.password, user.password):
-        access_token = Authorize.create_access_token(subject=db_user.email)
-        refresh_token = Authorize.create_refresh_token(subject=db_user.email)
+@login_router.post("/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    
+    db_user = session.query(Users).filter(Users.email == form_data.username).first()
+    if db_user and check_password_hash(db_user.hashed_password, form_data.password):
+        access_token = create_access_token(subject=db_user.email)
 
-        response={
-            "access": access_token,
-            "refresh": refresh_token
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
         }
-        return jsonable_encoder(response)
     
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
     detail="Invalid Credentials")
