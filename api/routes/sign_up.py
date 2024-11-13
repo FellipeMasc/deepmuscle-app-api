@@ -1,7 +1,7 @@
 from fastapi import APIRouter,status
 from sql.models import Users
 from sql.database import SessionLocal, engine
-from sql.schemas import UserCreate
+from sql.schemas import UserCreate, UserOut
 from fastapi.exceptions import HTTPException
 from werkzeug.security import generate_password_hash,check_password_hash
 
@@ -12,7 +12,7 @@ signup_router = APIRouter(
 
 session = SessionLocal(bind=engine)
 
-@signup_router.post("/sign_up", response_model=UserCreate, 
+@signup_router.post("/sign_up", response_model=UserOut, 
 status_code=status.HTTP_201_CREATED)
 async def sign_up(user: UserCreate):
     db_email = session.query(Users).filter(Users.email == user.email).first()
@@ -22,11 +22,8 @@ async def sign_up(user: UserCreate):
     new_user = Users(
         email=user.email,
         full_name=user.full_name,
-        age=user.age,
-        country=user.country,
-        phone=user.phone,
-        password=generate_password_hash(user.password),
-        is_active=user.is_active
+        hashed_password=generate_password_hash(user.password),
+        is_active=False
         )
     session.add(new_user)
     session.commit()
