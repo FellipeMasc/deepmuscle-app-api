@@ -20,20 +20,20 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 from sql.models import Base
 target_metadata = Base.metadata
-
+from dotenv import load_dotenv
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
+load_dotenv()
+import os
 def get_url() -> URL:
     return URL.create(
-    "mssql+pyodbc",
-    username="sa",
-    password="12345678",
-    host="localhost",
-    database="deepmuscle-dev",
-    query={"driver": "ODBC Driver 17 for SQL Server"},
+    "postgresql+psycopg2",
+    username=os.environ.get("DB_USERNAME"),
+    password=os.environ.get("DB_PASSWORD"),
+    host=os.environ.get("DB_HOST"),
+    database=os.environ.get("DB_NAME"),
 )
 
 def run_migrations_offline() -> None:
