@@ -38,6 +38,8 @@ async def get_user_details(details_user: UserDetailsModel, Authorize: AuthJWT = 
     new_user_details = UserDetails(
         height=details_user.height,
         weight=details_user.weight,
+        regularity=details_user.regularity,
+        objetctive=details_user.objetctive,
         gender=details_user.gender,
         created_at=datetime.now(),
         updated_at=datetime.now(),
@@ -52,6 +54,8 @@ async def get_user_details(details_user: UserDetailsModel, Authorize: AuthJWT = 
         "id": new_user_details.id,
         "height": new_user_details.height,
         "weight": new_user_details.weight,
+        "regularity": new_user_details.regularity,
+        "objetctive": new_user_details.objetctive,
         "gender": new_user_details.gender,
         "age": new_user_details.age,
         "fitness_level": new_user_details.fitness_level,
