@@ -11,7 +11,7 @@ app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=[origin], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 app.include_router(api_router)
-add_routes(app, rag_chain, path='/rag_conversation')
+# add_routes(app, rag_chain, path='/rag_conversation')
 
 
 if __name__ == "__main__":
