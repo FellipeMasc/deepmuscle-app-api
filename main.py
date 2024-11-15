@@ -1,16 +1,21 @@
 from fastapi import FastAPI
 from api.main import api_router
 from langserve import add_routes
-# from rag_conversation import chain as rag_chain
+from rag_conversation import chain as rag_chain
+from fastapi.middleware.cors import CORSMiddleware
+
+origin = "http://localhost:5173"
 
 app = FastAPI()
 
+app.add_middleware(CORSMiddleware, allow_origins=[origin], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
 app.include_router(api_router)
-# add_routes(app, rag_chain, path='/rag_conversation')
+add_routes(app, rag_chain, path='/rag_conversation')
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
     
 # uvicorn main:app --reload --host 127.0.0.1 --port 8001
