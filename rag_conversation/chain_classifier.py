@@ -136,6 +136,6 @@ _inputs = RunnableParallel(
 chain_classifier = (
     _inputs
     | ANSWER_PROMPT
-    | ChatOpenAI(model="gpt-4", temperature=0.7)
+    | ChatOpenAI(model="gpt-4", temperature=1)
     | StrOutputParser()
 )
