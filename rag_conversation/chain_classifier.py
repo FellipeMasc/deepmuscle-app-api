@@ -8,7 +8,6 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import (
     ChatPromptTemplate,
-    MessagesPlaceholder,
     format_document,
 )
 from langchain_core.prompts.prompt import PromptTemplate
@@ -17,11 +16,11 @@ from langchain_core.runnables import (
     RunnableBranch,
     RunnableLambda,
     RunnableParallel,
-    RunnablePassthrough,
 )
 from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
 import json
+import re
 
 load_dotenv()
 
@@ -37,55 +36,78 @@ vectorstore = PineconeVectorStore.from_existing_index(
 )
 retriever = vectorstore.as_retriever()
 
-# Condense a chat history and follow-up question into a standalone question
-_template = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
-Chat History:
-{chat_history}
-Follow Up Input: {question}
-Standalone question:"""  # noqa: E501
-CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
-
-# RAG answer synthesis prompt specifically for workout plan
-template = """Based on the user's information, provide a workout plan in JSON format that can be stored in the database.
-User Information:
+# RAG answer synthesis prompt specifically for workout plan in Portuguese
+template = """Com base nas informações do usuário e no contexto fornecido, crie um plano de treino personalizado em formato JSON que possa ser armazenado no banco de dados.
+Informações do Usuário:
 {context}
-Provide a JSON response in the following format:
+
+Use as informações do usuário, como idade, nível de condicionamento físico, gênero, altura e peso, em conjunto com o contexto da base de dados para criar um plano que inclua:
+- Um nome adequado para o treino.
+- Uma descrição detalhada do plano de treino.
+- Exercícios para diferentes dias da semana (pelo menos 4 dias), incluindo uma variedade de atividades.
+- Cada exercício deve incluir o nome, a categoria (por exemplo, Força, Cardio, Flexibilidade) e uma descrição.
+
+Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma explicação ou texto adicional fora deste formato):
 {{
-    "workout_name": "Workout Plan for Beginner",
-    "description": "A personalized workout plan based on user details.",
+    "workout_name": "Plano de Treino Personalizado",
+    "description": "Um plano de treino elaborado especificamente para as necessidades do usuário.",
     "days": [
         {{
-            "day": "Monday",
+            "day": "Segunda-feira",
             "exercises": [
                 {{
-                    "name": "Push-up",
-                    "category": "Strength",
-                    "description": "A bodyweight exercise for upper body strength."
-                }},
-                {{
-                    "name": "Squat",
-                    "category": "Strength",
-                    "description": "A lower body exercise focusing on the quadriceps and glutes."
+                    "name": "Nome do exercício",
+                    "category": "Categoria",
+                    "description": "Descrição do exercício."
                 }}
             ]
         }},
         {{
-            "day": "Wednesday",
+            "day": "Terça-feira",
             "exercises": [
                 {{
-                    "name": "Plank",
-                    "category": "Core",
-                    "description": "An exercise to strengthen the core muscles."
+                    "name": "Nome do exercício",
+                    "category": "Categoria",
+                    "description": "Descrição do exercício."
+                }}
+            ]
+        }},
+        {{
+            "day": "Quarta-feira",
+            "exercises": [
+                {{
+                    "name": "Nome do exercício",
+                    "category": "Categoria",
+                    "description": "Descrição do exercício."
+                }}
+            ]
+        }},
+        {{
+            "day": "Quinta-feira",
+            "exercises": [
+                {{
+                    "name": "Nome do exercício",
+                    "category": "Categoria",
+                    "description": "Descrição do exercício."
+                }}
+            ]
+        }},
+        {{
+            "day": "Sexta-feira",
+            "exercises": [
+                {{
+                    "name": "Nome do exercício",
+                    "category": "Categoria",
+                    "description": "Descrição do exercício."
                 }}
             ]
         }}
     ]
 }}
-Make sure the response is a valid JSON."""
+Certifique-se de que a resposta seja um JSON válido, sem nenhum texto adicional fora da estrutura JSON."""  # Reforcei que a resposta deve ser exclusivamente em JSON.
 ANSWER_PROMPT = ChatPromptTemplate.from_messages(
     [
         ("system", template),
-        MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{question}"),
     ]
 )
@@ -101,49 +123,19 @@ def _combine_documents(
     return document_separator.join(doc_strings)
 
 
-def _format_chat_history(chat_history: List[Tuple[str, str]]) -> List:
-    buffer = []
-    for human, ai in chat_history:
-        buffer.append(HumanMessage(content=human))
-        buffer.append(AIMessage(content=ai))
-    return buffer
-
-
-# User input
-class ChatHistory(BaseModel):
-    chat_history: List[Tuple[str, str]] = Field(..., extra={"widget": {"type": "chat"}})
-    question: str
-
-
-_search_query = RunnableBranch(
-    # If input includes chat_history, we condense it with the follow-up question
-    (
-        RunnableLambda(lambda x: bool(x.get("chat_history"))).with_config(
-            run_name="HasChatHistoryCheck"
-        ),  # Condense follow-up question and chat into a standalone_question
-        RunnablePassthrough.assign(
-            chat_history=lambda x: _format_chat_history(x["chat_history"])
-        )
-        | CONDENSE_QUESTION_PROMPT
-        | ChatOpenAI(temperature=0, max_tokens=100, model="gpt-3.5-turbo")
-        | StrOutputParser(),
-    ),
-    # Else, we have no chat history, so just pass through the question
-    RunnableLambda(itemgetter("question")),
-)
+_search_query = RunnableLambda(itemgetter("question"))
 
 _inputs = RunnableParallel(
     {
         "question": lambda x: x["question"],
-        "chat_history": lambda x: _format_chat_history(x["chat_history"]),
         "context": _search_query | retriever | _combine_documents,
     }
-).with_types(input_type=ChatHistory)
+).with_types(input_type=None)
 
 # Chain for generating structured workout suggestions
 chain_classifier = (
     _inputs
     | ANSWER_PROMPT
-    | ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+    | ChatOpenAI(model="gpt-4", temperature=0.7)
     | StrOutputParser()
 )

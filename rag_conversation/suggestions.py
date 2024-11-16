@@ -1,11 +1,25 @@
 import json
+import re
 from fastapi import HTTPException
 from sql.schemas import UserDetailsCreate
 from chain_classifier import chain_classifier
 
 
+# Function to parse response and ensure valid JSON
+def parse_json_response(response: str) -> dict:
+    try:
+        # Use regex to extract JSON from the response if there's additional text
+        json_match = re.search(r"\{.*\}", response, re.DOTALL)
+        if json_match:
+            return json.loads(json_match.group())
+        else:
+            raise ValueError("No valid JSON found in the response.")
+    except json.JSONDecodeError:
+        raise ValueError("Failed to parse JSON from the response.")
+
+
 # Function to generate workout suggestions using the adapted chain
-async def generate_workout_suggestions(user_details: UserDetailsCreate) -> dict:
+def generate_workout_suggestions(user_details: UserDetailsCreate) -> dict:
     # Constructing prompt context based on user details
     prompt_context = f"""
     Age: {user_details.age}
@@ -18,32 +32,22 @@ async def generate_workout_suggestions(user_details: UserDetailsCreate) -> dict:
     try:
         response = chain_classifier.invoke(
             {
-                "chat_history": [],
-                "question": "Create a personalized workout plan",
+                "question": "Crie um plano de treino personalizado com base nas informações fornecidas.",
                 "context": prompt_context,
             }
         )
-        # Assuming response is a valid JSON formatted string
-        workout_plan = json.loads(response)
+
+        # Attempt to parse the response as JSON
+        workout_plan = parse_json_response(response)
         return workout_plan
-    except json.JSONDecodeError as e:
+
+    except ValueError as e:
         raise HTTPException(
-            status_code=500, detail="Failed to parse the workout plan response."
+            status_code=500,
+            detail=f"Failed to parse the workout plan response: {str(e)}",
         )
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"An error occurred while generating workout suggestions: {str(e)}",
         )
-
-
-# Test the function
-async def test_generate_workout_suggestions():
-    test_user_details = UserDetailsCreate(
-        age=25, height=175.0, weight=70.0, gender="Male", fitness_level="Intermediate"
-    )
-    try:
-        workout_suggestions = await generate_workout_suggestions(test_user_details)
-        print("Workout Suggestions:", workout_suggestions)
-    except HTTPException as e:
-        print("Error:", e.detail)
