@@ -23,6 +23,7 @@ from langchain_core.runnables import (
 from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
 import os
+import pandas as pd
 
 load_dotenv()
 
@@ -35,11 +36,12 @@ PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX", "langchain-test")
 
 ### Ingest code - you may need to run this the first time
 # Load
-from langchain_community.document_loaders import CSVLoader
+from langchain_community.document_loaders import PDFMinerLoader
 # loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
 # data = loader.load()
-loader = CSVLoader("C:\ITA\csi-28\deepmuscle-app-api\docs\Exercise_Difficulty_Analysis.csv")
+loader = PDFMinerLoader("C:\ITA\csi-28\deepmuscle-app-api\docs\Treinos.pdf")
 data = loader.load()
+# Load DataFrame
 # Split
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)

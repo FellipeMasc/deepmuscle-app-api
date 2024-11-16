@@ -210,5 +210,19 @@ async def get_day_exercises(db: SessionDep, user: UserOut = Depends(get_current_
     return exercise_list
 
 @user_router.get("/get_user_infos")
-async def get_day_infos(db: SessionDep, user: UserOut = Depends(get_current_user)):
-    return {"full_name": user.full_name}
+async def get_user_infos(db: SessionDep, user: UserOut = Depends(get_current_user)):
+    db_user = db.query(Users).filter(Users.email == user.email).first()
+    user_details = db.query(UserDetails).filter(UserDetails.user_id == db_user.id).first()
+    if not user_details:
+        raise HTTPException(status_code=400, detail="User details not found")
+    
+    return {
+        "full_name": db_user.full_name,
+        "email": db_user.email,
+        "age": user_details.age,
+        "height": user_details.height,
+        "weight": user_details.weight,
+        "gender": user_details.gender,
+        "exercise_level": user_details.fitness_level
+    }
+
