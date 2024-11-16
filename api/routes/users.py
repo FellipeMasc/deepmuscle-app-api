@@ -208,3 +208,7 @@ async def get_day_exercises(db: SessionDep, user: UserOut = Depends(get_current_
     exercise_list = db.query(Exercises).filter(Exercises.id.in_(exercise_ids)).all()
 
     return exercise_list
+
+@user_router.get("/get_user_infos")
+async def get_day_infos(db: SessionDep, user: UserOut = Depends(get_current_user)):
+    return {"full_name": user.full_name}
