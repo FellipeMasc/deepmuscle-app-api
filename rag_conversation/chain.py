@@ -23,13 +23,11 @@ from langchain_core.runnables import (
 from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 if os.environ.get("PINECONE_API_KEY", None) is None:
     raise Exception("Missing `PINECONE_API_KEY` environment variable.")
-
-# if os.environ.get("PINECONE_ENVIRONMENT", None) is None:
-#     raise Exception("Missing `PINECONE_ENVIRONMENT` environment variable.")
 
 PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX", "langchain-test")
 
@@ -111,7 +109,7 @@ _search_query = RunnableBranch(
             chat_history=lambda x: _format_chat_history(x["chat_history"])
         )
         | CONDENSE_QUESTION_PROMPT
-        | ChatOpenAI(temperature=0, max_tokens=100, model="gpt3")   
+        | ChatOpenAI(temperature=0, max_tokens=100, model="gpt3")
         | StrOutputParser(),
     ),
     # Else, we have no chat history, so just pass through the question
@@ -124,6 +122,6 @@ _inputs = RunnableParallel(
         "chat_history": lambda x: _format_chat_history(x["chat_history"]),
         "context": _search_query | retriever | _combine_documents,
     }
-).with_types(input_type=ChatHistory)       
+).with_types(input_type=ChatHistory)
 
 chain = _inputs | ANSWER_PROMPT | ChatOpenAI() | StrOutputParser()
