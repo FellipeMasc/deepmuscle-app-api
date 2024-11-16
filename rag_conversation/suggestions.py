@@ -1,7 +1,7 @@
 import json
 from fastapi import HTTPException
 from sql.schemas import UserDetailsCreate
-from chain_classifier import chain_classifier
+from rag_conversation.chain_classifier import chain_classifier
 
 
 # Function to generate workout suggestions using the adapted chain
