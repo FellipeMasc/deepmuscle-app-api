@@ -8,3 +8,4 @@ __pycache__
 .env
 Scripts/
 *container_sql
+*docs
