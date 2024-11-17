@@ -39,7 +39,7 @@ PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX", "langchain-test")
 from langchain_community.document_loaders import PDFMinerLoader
 # loader = WebBaseLoader("https://lilianweng.github.io/posts/2023-06-23-agent/")
 # data = loader.load()
-loader = PDFMinerLoader("C:\ITA\csi-28\deepmuscle-app-api\docs\Treinos.pdf")
+loader = PDFMinerLoader("C:\ITA\csi-28\deepmuscle-app-api\docs\montar_treino.pdf")
 data = loader.load()
 # Load DataFrame
 # Split
