@@ -2,9 +2,7 @@ import json
 import re
 from fastapi import HTTPException
 from sql.schemas import UserDetailsCreate
-from chain_classifier import chain_classifier
-from chain_classifier import retriever
-from chain_classifier import _combine_documents
+from rag_conversation.chain_classifier import chain_classifier, retriever, _combine_documents
 
 
 # Function to parse response and ensure valid JSON

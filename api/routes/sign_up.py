@@ -1,4 +1,4 @@
-from fastapi import APIRouter,status
+from fastapi import APIRouter, Response,status
 from sql.models import Users
 from sql.database import SessionLocal, engine
 from sql.schemas import UserCreate, UserOut
@@ -27,7 +27,7 @@ async def sign_up(user: UserCreate):
         )
     session.add(new_user)
     session.commit()
-    return new_user
+    return Response(status_code=201, content="User created successfully")
     
 
 
