@@ -44,10 +44,14 @@ Informações do Usuário:
 Use as informações do usuário, como idade, nível de condicionamento físico, gênero, altura e peso, em conjunto com o contexto da base de dados para criar um plano que inclua:
 - Um nome adequado para o treino.
 - Uma descrição detalhada do plano de treino.
-- Exercícios para diferentes dias da semana (pelo menos 4 dias), incluindo uma variedade de atividades.
-- Cada exercício deve incluir o nome, a categoria (por exemplo, Força, Cardio, Flexibilidade) e uma descrição, todos eles DEVEM estar dentro do escopo dos dados presentes no contexto da base de dados.
+- Exercícios para diferentes dias da semana , incluindo uma variedade de exercicios físicos.
+- Cada exercício deve incluir o nome, a categoria (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) e uma descrição, todos eles DEVEM estar dentro do escopo dos dados presentes no contexto da base de dados.
 - O número de exercícios por dia pode variar de acordo com o nível de condicionamento físico do usuário.
-- Certifique-se de usar explicitamente os exercícios e descrições encontrados no contexto recuperado da base de dados.
+- Certifique-se de usar explicitamente os exercícios e descrições encontrados no contexto recuperado da base de dados, principalmente para escolher os exercícios e quantidade de exercicio por dia adequados para o usuário.
+
+- Eu preciso de pelo menos 3 exercicios por dia.
+
+- Eu preciso que você coloque todas as categorias de exercicios dentro dos 5 dias da semana, ou seja todas essas (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) devem estar presentes.
 
 Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma explicação ou texto adicional fora deste formato):
 {{
@@ -61,6 +65,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
+                    "series": "Séries",
+                    "reps": "Repetições",
                 }}
             ]
         }},
@@ -71,6 +77,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
+                    "series": "Séries",
+                    "reps": "Repetições",
                 }}
             ]
         }},
@@ -81,6 +89,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
+                    "series": "Séries",
+                    "reps": "Repetições",
                 }}
             ]
         }},
@@ -91,6 +101,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
+                    "series": "Séries",
+                    "reps": "Repetições",
                 }}
             ]
         }},
@@ -101,6 +113,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
+                    "series": "Séries",
+                    "reps": "Repetições",
                 }}
             ]
         }}
@@ -138,6 +152,6 @@ _inputs = RunnableParallel(
 chain_classifier = (
     _inputs
     | ANSWER_PROMPT
-    | ChatOpenAI(model="gpt-4", temperature=0.7)
+    | ChatOpenAI(model="gpt-4-turbo", temperature=0.5)
     | StrOutputParser()
 )

@@ -1,4 +1,6 @@
 import asyncio
+import sys
+sys.path.append("C:/ITA/csi-28/deepmuscle-app-api")
 from suggestions import generate_workout_suggestions
 from sql.schemas import UserDetailsCreate
 
