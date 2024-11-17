@@ -45,7 +45,9 @@ Use as informações do usuário, como idade, nível de condicionamento físico,
 - Um nome adequado para o treino.
 - Uma descrição detalhada do plano de treino.
 - Exercícios para diferentes dias da semana (pelo menos 4 dias), incluindo uma variedade de atividades.
-- Cada exercício deve incluir o nome, a categoria (por exemplo, Força, Cardio, Flexibilidade) e uma descrição.
+- Cada exercício deve incluir o nome, a categoria (por exemplo, Força, Cardio, Flexibilidade) e uma descrição, todos eles DEVEM estar dentro do escopo dos dados presentes no contexto da base de dados.
+- O número de exercícios por dia pode variar de acordo com o nível de condicionamento físico do usuário.
+- Certifique-se de usar explicitamente os exercícios e descrições encontrados no contexto recuperado da base de dados.
 
 Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma explicação ou texto adicional fora deste formato):
 {{
@@ -104,7 +106,7 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
         }}
     ]
 }}
-Certifique-se de que a resposta seja um JSON válido, sem nenhum texto adicional fora da estrutura JSON."""  # Reforcei que a resposta deve ser exclusivamente em JSON.
+Certifique-se de que a resposta seja um JSON válido, sem nenhum texto adicional fora da estrutura JSON."""  # Reforcei que o contexto do Pinecone deve ser usado explicitamente.
 ANSWER_PROMPT = ChatPromptTemplate.from_messages(
     [
         ("system", template),
@@ -136,6 +138,6 @@ _inputs = RunnableParallel(
 chain_classifier = (
     _inputs
     | ANSWER_PROMPT
-    | ChatOpenAI(model="gpt-4", temperature=1)
+    | ChatOpenAI(model="gpt-4", temperature=0.7)
     | StrOutputParser()
 )
