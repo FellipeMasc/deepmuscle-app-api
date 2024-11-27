@@ -42,21 +42,23 @@ Informações do Usuário:
 {context}
 
 Use as informações do usuário, como idade, nível de condicionamento físico, gênero, altura e peso, em conjunto com o contexto da base de dados para criar um plano que inclua:
-- Um nome adequado para o treino.
-- Uma descrição detalhada do plano de treino.
+
 - Exercícios para diferentes dias da semana , incluindo uma variedade de exercicios físicos.
+
 - Cada exercício deve incluir o nome, a categoria (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) e uma descrição, todos eles DEVEM estar dentro do escopo dos dados presentes no contexto da base de dados.
-- O número de exercícios por dia pode variar de acordo com o nível de condicionamento físico do usuário.
+
 - Certifique-se de usar explicitamente os exercícios e descrições encontrados no contexto recuperado da base de dados, principalmente para escolher os exercícios e quantidade de exercicio por dia adequados para o usuário.
 
-- Eu preciso de pelo menos 3 exercicios por dia.
+- **Eu preciso de 4 exercícios por dia, pelo menos**"
 
-- Eu preciso que você coloque todas as categorias de exercicios dentro dos 5 dias da semana, ou seja todas essas (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) devem estar presentes.
+- **Eu preciso que você coloque todas as categorias de exercicios dentro dos 5 dias da semana, ou seja todas essas (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) devem estar presentes**.
+
+- Eu preciso que você retorne as séries e repetições como inteiros.
 
 Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma explicação ou texto adicional fora deste formato):
 {{
-    "workout_name": "Plano de Treino Personalizado",
-    "description": "Um plano de treino elaborado especificamente para as necessidades do usuário.",
+    "workout_name": "Nome do treino que você criou",
+    "description": "Um plano de treino elaborado especificamente para as necessidades do usuário passado.",
     "days": [
         {{
             "day": "Segunda-feira",
@@ -65,8 +67,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
-                    "series": "Séries",
-                    "reps": "Repetições",
+                    "series": "4",
+                    "reps": "10",
                 }}
             ]
         }},
@@ -77,8 +79,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
-                    "series": "Séries",
-                    "reps": "Repetições",
+                    "series": "4",
+                    "reps": "10",
                 }}
             ]
         }},
@@ -89,8 +91,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
-                    "series": "Séries",
-                    "reps": "Repetições",
+                    "series": "4",
+                    "reps": "10",
                 }}
             ]
         }},
@@ -101,8 +103,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
-                    "series": "Séries",
-                    "reps": "Repetições",
+                    "series": "4",
+                    "reps": "8",
                 }}
             ]
         }},
@@ -113,8 +115,8 @@ Apenas forneça uma resposta em JSON no seguinte formato (não inclua nenhuma ex
                     "name": "Nome do exercício",
                     "category": "Categoria",
                     "description": "Descrição do exercício."
-                    "series": "Séries",
-                    "reps": "Repetições",
+                    "series": "4",
+                    "reps": "8",
                 }}
             ]
         }}

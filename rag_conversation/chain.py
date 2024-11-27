@@ -93,7 +93,7 @@ _search_query = RunnableBranch(
             chat_history=lambda x: _format_chat_history(x["chat_history"])
         )
         | CONDENSE_QUESTION_PROMPT
-        | ChatOpenAI(temperature=0, max_tokens=100, model="gpt3")
+        | ChatOpenAI(temperature=0, max_tokens=100, model="gpt-4-turbo")
         | StrOutputParser(),
     ),
     # Else, we have no chat history, so just pass through the question
