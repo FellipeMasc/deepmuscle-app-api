@@ -4,11 +4,11 @@ from langserve import add_routes
 from rag_conversation import chain as rag_chain
 from fastapi.middleware.cors import CORSMiddleware
 
-origin = "http://localhost:5173"
+origins = ["http://localhost:5173", "https://deepmuscle-app-sand.vercel.app"]
 
 app = FastAPI()
 
-app.add_middleware(CORSMiddleware, allow_origins=[origin], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 app.include_router(api_router)
 add_routes(app, rag_chain, path='/rag_conversation')
