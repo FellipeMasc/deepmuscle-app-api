@@ -43,7 +43,7 @@ Informações do Usuário:
 
 Use as informações do usuário, como idade, nível de condicionamento físico, gênero, altura e peso, em conjunto com o contexto da base de dados para criar um plano que inclua:
 
-- Exercícios para diferentes dias da semana , incluindo uma variedade de exercicios físicos.
+- **Exercícios para diferentes dias da semana, incluindo uma variedade de exercicios físicos.**
 
 - Cada exercício deve incluir o nome, a categoria (Peito, Dorsal, Abdomen, Deltoide, Biceps, Triceps, Panturrilha, Posterior de coxa, Quadriceps) e uma descrição, todos eles DEVEM estar dentro do escopo dos dados presentes no contexto da base de dados.
 
